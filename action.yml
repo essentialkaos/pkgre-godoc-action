@@ -1,0 +1,28 @@
+name: "PKG.RE GoDoc"
+description: "Action for generating docs for packages that use PKG.RE service"
+author: "ESSENTIALKAOS"
+
+branding:
+  icon: "book"  
+  color: "blue"
+
+runs:
+  using: "composite"
+  steps:
+    - id: gosum-req
+      shell: bash
+      run: |
+        if [[ $GITHUB_REF == refs/tags/* ]] ; then
+          full_ver=$(echo ${GITHUB_REF} | cut -f3 -d'/')
+          major_ver=$(echo ${full_ver} | cut -f1 -d'.')
+          curl -s -m 15 https://sum.golang.org/lookup/pkg.re/${{github.repository}}.${major_ver}@${full_ver}+incompatible
+        fi
+
+    - id: pgkgodev-req
+      shell: bash
+      run: |
+        if [[ $GITHUB_REF == refs/tags/* ]] ; then
+          full_ver=$(echo ${GITHUB_REF} | cut -f3 -d'/')
+          major_ver=$(echo ${full_ver} | cut -f1 -d'.')
+          curl -s -m 5 -X POST https://pkg.go.dev/fetch/pkg.re/${{github.repository}}.${major_ver}@${full_ver}+incompatible || exit 0
+        fi
