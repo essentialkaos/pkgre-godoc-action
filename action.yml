@@ -4,7 +4,7 @@ author: "ESSENTIALKAOS"
 
 branding:
   icon: "book"  
-  color: "blue"
+  color: "white"
 
 runs:
   using: "composite"
